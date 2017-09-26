@@ -2,8 +2,13 @@ cmake_minimum_required ( VERSION 3.5 )
 
 project ( xdb )
 
-set ( SOURCES
-    "main.cpp"
+set (HEADERS
+    "errors.h"
 )
 
-add_executable ( ${PROJECT_NAME} ${SOURCES} )
+set ( SOURCES
+    "main.cpp"
+    "errors.cpp"
+)
+
+add_executable ( ${PROJECT_NAME} ${HEADERS} ${SOURCES} )
