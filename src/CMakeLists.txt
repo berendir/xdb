@@ -4,6 +4,7 @@ project ( xdb )
 
 set (HEADERS
     "errors.h"
+    "db3_structures.h"
 )
 
 set ( SOURCES
