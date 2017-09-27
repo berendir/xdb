@@ -2,8 +2,16 @@ cmake_minimum_required ( VERSION 3.5 )
 
 project ( xdb )
 
-set (HEADERS
+
+set ( PUBLIC_HEADERS
     "errors.h"
+    "definitions.h"
+    "db3_entry_base.h"
+    "field_base.h"
+    "record_base.h"
+)
+
+set ( PRIVATE_HEADERS
     "db3_structures.h"
 )
 
@@ -12,4 +20,4 @@ set ( SOURCES
     "errors.cpp"
 )
 
-add_executable ( ${PROJECT_NAME} ${HEADERS} ${SOURCES} )
+add_executable ( ${PROJECT_NAME} ${PUBLIC_HEADERS} ${PRIVATE_HEADERS} ${SOURCES} )

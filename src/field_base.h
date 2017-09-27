@@ -24,41 +24,39 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#ifndef XDB_DB3_STRUCTURES_H
-#define XDB_DB3_STRUCTURES_H
+#ifndef XDB_FIELD_BASE_H
+#define XDB_FIELD_BASE_H
 
-#include <cstdint>
+#include <string>
+#include <ctime>
+
+#include "definitions.h"
+#include "db3_entry_base.h"
 
 
 namespace xdb {
 
-typedef struct {
-    char    version;
-    uint8_t update_year;
-    uint8_t update_month;
-    uint8_t update_day;
-    int32_t record_day;
-    int16_t header_size;
-    int16_t record_size;
-    char    reserved[18];
+/**
+ * @brief The field_base class models a single field of a record.
+ */
+class field_base : public db3_entry_base {
 
-} db3_header;
+public:
+    virtual ~field_base() { }
 
+    virtual std::string name() const = 0;
 
-typedef struct {
-    char    name[11];
-    char    type;
-    int32_t data_address;
-    uint8_t length;
-    uint8_t decimal_places;
-    char    reserved[14];
+    virtual field_type type() const = 0;
 
-} db3_field_descriptor;
+    virtual std::string toString() const = 0;
 
+    virtual std::tm toDate() const = 0;
 
-const int DB3_TYPE_NO_MEMO = 0x03;
-const int DB3_TYPE_MEMO    = 0x83;
+    virtual bool toBool() const = 0;
+
+    virtual double toNumber() const = 0;
+};
 
 }
 
-#endif // XDB_DB3_STRUCTURES_H
+#endif // XDB_FIELD_BASE_H

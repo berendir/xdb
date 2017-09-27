@@ -24,41 +24,23 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#ifndef XDB_DB3_STRUCTURES_H
-#define XDB_DB3_STRUCTURES_H
-
-#include <cstdint>
-
+#ifndef XDB_DB3_ENTRY_H
+#define XDB_DB3_ENTRY_H
 
 namespace xdb {
 
-typedef struct {
-    char    version;
-    uint8_t update_year;
-    uint8_t update_month;
-    uint8_t update_day;
-    int32_t record_day;
-    int16_t header_size;
-    int16_t record_size;
-    char    reserved[18];
+/**
+ * @brief The db3_entry_base class defines a generic entry in a DBF file.
+ */
+class db3_entry_base {
 
-} db3_header;
+public:
+    virtual ~db3_entry_base() { }
 
-
-typedef struct {
-    char    name[11];
-    char    type;
-    int32_t data_address;
-    uint8_t length;
-    uint8_t decimal_places;
-    char    reserved[14];
-
-} db3_field_descriptor;
-
-
-const int DB3_TYPE_NO_MEMO = 0x03;
-const int DB3_TYPE_MEMO    = 0x83;
+protected:
+    virtual void setValue(const char *data, int length) = 0;
+};
 
 }
 
-#endif // XDB_DB3_STRUCTURES_H
+#endif // XDB_DB3_ENTRY_H
