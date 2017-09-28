@@ -14,11 +14,15 @@ set ( PUBLIC_HEADERS
 
 set ( PRIVATE_HEADERS
     "db3_structures.h"
+    "db3_table.h"
+    "utils.h"
 )
 
 set ( SOURCES
     "main.cpp"
     "errors.cpp"
+    "db3_table.cpp"
+    "utils.cpp"
 )
 
 add_executable ( ${PROJECT_NAME} ${PUBLIC_HEADERS} ${PRIVATE_HEADERS} ${SOURCES} )
