@@ -9,6 +9,7 @@ set ( PUBLIC_HEADERS
     "db3_entry_base.h"
     "field_base.h"
     "record_base.h"
+    "table_base.h"
 )
 
 set ( PRIVATE_HEADERS

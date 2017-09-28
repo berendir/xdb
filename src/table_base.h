@@ -22,39 +22,33 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#ifndef XDB_DB3_STRUCTURES_H
-#define XDB_DB3_STRUCTURES_H
+#ifndef XDB_TABLE_BASE_H
+#define XDB_TABLE_BASE_H
 
-#include <cstdint>
+#include <string>
+#include <fstream>
 
 
 namespace xdb {
 
-struct db3_header {
-    char     version;
-    uint8_t  update_year;
-    uint8_t  update_month;
-    uint8_t  update_day;
-    uint32_t record_count;
-    uint16_t header_size;
-    uint16_t record_size;
-    char     reserved[18];
+class table_base {
+
+public:
+    table_base(const std::string &file_name) : m_file_name(file_name) { }
+
+    virtual ~table_base() { close(); }
+
+    virtual void open() = 0;
+
+    virtual void close() { }
+
+    virtual int size() const = 0;
+
+protected:
+    const std::string m_file_name;
+    std::fstream m_stm;
 };
-
-
-struct db3_field_descriptor {
-    char    name[11];
-    char    type;
-    int32_t data_address;
-    uint8_t size;
-    uint8_t decimal_places;
-    char    reserved[14];
-};
-
-
-const char DB3_TYPE_NO_MEMO = 0x03;
-const char DB3_TYPE_MEMO    = 0x83;
 
 }
 
-#endif // XDB_DB3_STRUCTURES_H
+#endif // XDB_TABLE_BASE_H
