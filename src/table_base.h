@@ -27,6 +27,9 @@
 
 #include <string>
 #include <fstream>
+#include <vector>
+
+#include "record_base.h"
 
 
 namespace xdb {
@@ -42,11 +45,16 @@ public:
 
     virtual void close() { }
 
+    inline bool is_open() const { return m_stm.is_open() && m_stm.good(); }
+
     virtual int size() const = 0;
 
+    virtual record_base * at(int index) const = 0;
+
 protected:
+
     const std::string m_file_name;
-    std::fstream m_stm;
+    mutable std::fstream m_stm;
 };
 
 }

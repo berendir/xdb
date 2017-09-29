@@ -27,7 +27,8 @@
 
 namespace xdb {
 
-enum field_type {
+enum field_type : char {
+    unknown = 0,
     string  = 'C',
     date    = 'D',
     boolean = 'L',

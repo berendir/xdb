@@ -26,9 +26,11 @@
 #define XDB_DB3_TABLE_H
 
 #include <vector>
+#include <memory>
 
 #include "table_base.h"
 #include "db3_structures.h"
+#include "db3_record.h"
 
 
 namespace xdb {
@@ -44,9 +46,15 @@ public:
 
     int size() const;
 
+    record_base * at(int index) const;
+
 protected:
     db3_header m_header;
-    std::vector<db3_field_descriptor> m_field_descriptors;
+    std::shared_ptr<std::vector<db3_field_descriptor>> m_field_descriptors;
+    uint32_t m_records_start;
+    std::unique_ptr<db3_record> m_record;
+    mutable int m_last_index;
+    mutable std::vector<char> m_single_record_data;
 };
 
 }

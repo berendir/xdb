@@ -36,7 +36,7 @@ public:
     virtual ~db3_entry_base() { }
 
 protected:
-    virtual void setValue(const char *data, int length) = 0;
+    virtual void set_value(const char *data, int length) = 0;
 };
 
 }
