@@ -54,6 +54,7 @@ struct db3_field_descriptor {
 
 const char DB3_TYPE_NO_MEMO = 0x03;
 const char DB3_TYPE_MEMO    = 0x83;
+const char DB3_HEADER_LIMIT = 0x0D;
 
 }
 
