@@ -16,6 +16,8 @@ set ( PRIVATE_HEADERS
     "db3_structures.h"
     "db3_table.h"
     "utils.h"
+    "db3_record.h"
+    "db3_field.h"
 )
 
 set ( SOURCES
@@ -23,6 +25,8 @@ set ( SOURCES
     "errors.cpp"
     "db3_table.cpp"
     "utils.cpp"
+    "db3_record.cpp"
+    "db3_field.cpp"
 )
 
 add_executable ( ${PROJECT_NAME} ${PUBLIC_HEADERS} ${PRIVATE_HEADERS} ${SOURCES} )
