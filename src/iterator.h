@@ -22,48 +22,43 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#ifndef XDB_TABLE_BASE_H
-#define XDB_TABLE_BASE_H
+#ifndef XDB_ITERATOR_H
+#define XDB_ITERATOR_H
 
-#include <string>
-#include <fstream>
+
+#include <iterator>
 #include <vector>
+#include <memory>
 
+#include "table_base.h"
 #include "record_base.h"
 
 
 namespace xdb {
 
-class table_base {
-
-    friend class const_iterator;
-
+class const_iterator : public std::iterator<std::input_iterator_tag, record_base>
+{
 public:
-    table_base(const std::string &file_name) : m_file_name(file_name) { }
+    const_iterator(table_base *table, int starting_index, int buffer_size);
 
-    virtual ~table_base() { close(); }
+    const_iterator(const const_iterator& mit);
 
-    virtual void open() = 0;
+    const_iterator& operator++();
 
-    virtual void close() { }
+    bool operator==(const const_iterator& rhs) const;
 
-    inline bool is_open() const { return m_stm.is_open(); }
+    inline bool operator!=(const const_iterator& rhs) const { return !(*this == rhs); }
 
-    virtual int size() const = 0;
-
-    virtual record_base * at(int index) = 0;
+    const record_base * operator->() const;
 
 protected:
-    virtual int record_size() const = 0;
-
-    virtual uint32_t record_start() const = 0;
-
-    virtual record_base * create_record() const = 0;
-
-    const std::string m_file_name;
-    std::fstream m_stm;
+    table_base *m_table;
+    std::vector<char> m_buffer;
+    int m_index;
+    std::unique_ptr<record_base> m_record;
+    int m_buffer_offset;
 };
 
 }
 
-#endif // XDB_TABLE_BASE_H
+#endif // XDB_ITERATOR_H

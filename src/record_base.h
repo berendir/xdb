@@ -35,6 +35,8 @@ namespace xdb {
  */
 class record_base : public db3_entry_base {
 
+    friend class const_iterator;
+
 public:
     virtual ~record_base() { }
 

@@ -34,7 +34,9 @@ using namespace std;
 
 db3_table::db3_table(const std::string &file_name) :
     table_base(file_name),
-    m_last_index(-1)
+    m_last_index(-1),
+    m_header_size(sizeof(db3_header)),
+    m_field_descriptor_size(sizeof(db3_field_descriptor))
 {
     m_stm.open(m_file_name);
 
@@ -69,7 +71,6 @@ void db3_table::open()
     int field_count = (m_header.header_size - HEADER_SIZE) / FIELD_DESCRIPTOR_SIZE;
 
     m_field_descriptors = make_shared<vector<db3_field_descriptor>>(field_count);
-    m_field_descriptors->resize(field_count);
 
     m_stm.seekg(HEADER_SIZE, ios_base::beg);
     m_stm.read((char*) m_field_descriptors->data(), FIELD_DESCRIPTOR_SIZE * field_count);
@@ -108,4 +109,20 @@ record_base * db3_table::at(int index)
     m_last_index = index;
 
     return m_record.get();
+}
+
+int db3_table::record_size() const
+{
+    return m_header.record_size;
+}
+
+uint32_t db3_table::record_start() const
+{
+    int field_count = (m_header.header_size - m_header_size) / m_field_descriptor_size;
+    return m_header_size + field_count * m_field_descriptor_size + 1;
+}
+
+record_base * db3_table::create_record() const
+{
+    return new db3_record(m_field_descriptors);
 }

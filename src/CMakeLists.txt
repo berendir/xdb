@@ -10,6 +10,7 @@ set ( PUBLIC_HEADERS
     "field_base.h"
     "record_base.h"
     "table_base.h"
+    "iterator.h"
 )
 
 set ( PRIVATE_HEADERS
@@ -25,6 +26,7 @@ set ( SOURCES
     "errors.cpp"
     "db3_table.cpp"
     "utils.cpp"
+    "iterator.cpp"
     "db3_record.cpp"
     "db3_field.cpp"
 )

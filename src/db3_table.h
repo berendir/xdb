@@ -49,12 +49,20 @@ public:
     record_base * at(int index);
 
 protected:
+    int record_size() const;
+
+    uint32_t record_start() const;
+
+    record_base * create_record() const;
+
     db3_header m_header;
     std::shared_ptr<std::vector<db3_field_descriptor>> m_field_descriptors;
     uint32_t m_records_start;
     std::unique_ptr<db3_record> m_record;
     int m_last_index;
     std::vector<char> m_single_record_data;
+    const int m_header_size;
+    int m_field_descriptor_size;
 };
 
 }
