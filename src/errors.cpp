@@ -42,27 +42,26 @@ xdb::exception::exception(const std::string &code, const std::string &message, c
     what_string << "exception " << m_code << ": ";
     what_string << m_message;
 
-    m_what = new char[std::char_traits<char>::length(what_string.str().data())];
-    strcpy(m_what, what_string.str().data());
+    m_what = what_string.str();
 }
 
 exception::exception(const exception &other) :
     m_code(other.m_code),
     m_message(other.m_message),
-    m_function(other.m_function)
+    m_function(other.m_function),
+    m_what(other.m_what)
 {
-    m_what = new char[strlen(other.m_what)];
-    strcpy(m_what, other.m_what);
+
 }
 
 exception::~exception()
 {
-    delete m_what;
+
 }
 
 const char * exception::what() const noexcept
 {
-    return m_what;
+    return m_what.c_str();
 }
 
 std::string exception::code() const

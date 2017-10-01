@@ -56,7 +56,7 @@ private:
     std::string m_code;
     std::string m_message;
     std::string m_function;
-    char * m_what;
+    std::string m_what;
 };
 
 
@@ -80,6 +80,16 @@ public:
         exception(code, message, function) { }
 };
 
+/**
+ * @brief The out_of_range_error class
+ */
+class out_of_range_error : public exception
+{
+public:
+    out_of_range_error(const std::string &code, const std::string &message, const std::string &function) :
+        exception(code, message, function) { }
+};
+
 }
 
 #define XDB_THROW_EXCEPTION(c, m) throw xdb::exception((c), (m), __FUNCTION__)
@@ -87,5 +97,7 @@ public:
 #define XDB_IO_ERROR(c, m) throw xdb::io_error((c), (m), __FUNCTION__)
 
 #define XDB_VALIDATION_ERROR(c, m) throw xdb::validation_error((c), (m), __FUNCTION__)
+
+#define XDB_OUT_OF_RANGE_ERROR(c, m) throw xdb::out_of_range_error((c), (m), __FUNCTION__)
 
 #endif // XDB_ERRORS_H
