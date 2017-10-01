@@ -45,16 +45,16 @@ public:
 
     virtual void close() { }
 
-    inline bool is_open() const { return m_stm.is_open() && m_stm.good(); }
+    inline bool is_open() const { return m_stm.is_open(); }
 
     virtual int size() const = 0;
 
-    virtual record_base * at(int index) const = 0;
+    virtual record_base * at(int index) = 0;
 
 protected:
 
     const std::string m_file_name;
-    mutable std::fstream m_stm;
+    std::fstream m_stm;
 };
 
 }

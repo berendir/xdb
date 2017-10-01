@@ -93,10 +93,10 @@ int db3_table::size() const
     return is_open() ? m_header.record_count : -1;
 }
 
-record_base * db3_table::at(int index) const
+record_base * db3_table::at(int index)
 {
     if (index < 0 || index >= m_header.record_count)
-        XDB_VALIDATION_ERROR("XDBXXXX", "Index out of range");
+        XDB_OUT_OF_RANGE_ERROR("XDB0008", "Index out of range");
 
     if (index == m_last_index)
         return m_record.get();
