@@ -51,6 +51,8 @@ public:
 
     const record_base * operator->() const;
 
+    const record_base * operator*() const;
+
 protected:
     table_base *m_table;
     std::vector<char> m_buffer;

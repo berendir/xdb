@@ -58,13 +58,18 @@ const_iterator::const_iterator(table_base *table, int starting_index, int buffer
     m_table->m_stm.read(m_buffer.data(), m_buffer.size());
 
     m_record.reset(m_table->create_record());
-    m_record->set_value(&m_buffer[m_buffer_offset], m_table->record_size());
+    m_record->set_value(&m_buffer[m_buffer_offset]);
     m_buffer_offset += m_table->record_size();
 }
 
-const_iterator::const_iterator(const const_iterator &mit)
+const_iterator::const_iterator(const const_iterator &mit) :
+    m_table(mit.m_table),
+    m_buffer(mit.m_buffer),
+    m_index(mit.m_index),
+    m_record(),
+    m_buffer_offset(mit.m_buffer_offset)
 {
-
+    m_record.reset(mit.m_record->clone());
 }
 
 const_iterator &const_iterator::operator++()
@@ -90,6 +95,11 @@ bool const_iterator::operator==(const const_iterator &rhs) const
 }
 
 const record_base * const_iterator::operator->() const
+{
+    return m_record.get();
+}
+
+const record_base * const_iterator::operator*() const
 {
     return m_record.get();
 }

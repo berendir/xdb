@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include "db3_field.h"
+#include "errors.h"
 
 using namespace xdb;
 using namespace std;
@@ -141,6 +142,6 @@ void db3_field::set_value(const char *data)
             break;
 
         default:
-            break;
+            XDB_VALIDATION_ERROR("XDBXXXX", "Invalid field type");
     }
 }

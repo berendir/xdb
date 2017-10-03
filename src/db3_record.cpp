@@ -37,7 +37,7 @@ db3_record::db3_record(std::shared_ptr<std::vector<db3_field_descriptor>> descri
 {
     m_fields.resize(descriptors->size());
 
-    m_field_indexes = make_shared<std::unordered_map<std::string,int>>();
+    m_field_indexes = make_shared<unordered_map<std::string,int>>(m_field_count);
 
     for (int i = 0; i < m_descriptors->size(); ++i) {
         m_fields[i].reset(new db3_field(&m_descriptors->at(i)));
@@ -64,7 +64,7 @@ db3_record::~db3_record()
 field_base * db3_record::field(int index) const
 {
     if (index < 0 || index >= m_fields.size())
-        XDB_THROW_EXCEPTION("XDBXXXX", "Field index out of range");
+        XDB_OUT_OF_RANGE_ERROR("XDB0013", "Field index out of range");
 
     return m_fields[index].get();
 }
