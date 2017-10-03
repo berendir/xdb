@@ -32,14 +32,28 @@ using namespace std;
 
 db3_record::db3_record(std::shared_ptr<std::vector<db3_field_descriptor>> descriptors) :
     record_base(),
-    m_descriptors(descriptors)
+    m_descriptors(descriptors),
+    m_field_count(m_descriptors->size())
 {
     m_fields.resize(descriptors->size());
 
+    m_field_indexes = make_shared<std::unordered_map<std::string,int>>();
+
     for (int i = 0; i < m_descriptors->size(); ++i) {
         m_fields[i].reset(new db3_field(&m_descriptors->at(i)));
-        m_field_indexes[m_fields[i]->name()] = i;
+        (*m_field_indexes)[m_fields[i]->name()] = i;
     }
+}
+
+db3_record::db3_record(const db3_record &other) :
+    record_base(),
+    m_descriptors(other.m_descriptors),
+    m_fields(other.m_fields.size()),
+    m_field_indexes(other.m_field_indexes),
+    m_field_count(m_descriptors->size())
+{
+    for (int i = 0; i < m_descriptors->size(); ++i)
+        m_fields[i].reset(other.m_fields[i]->clone());
 }
 
 db3_record::~db3_record()
@@ -60,7 +74,7 @@ field_base * db3_record::field(const std::string &name) const
     int index = -1;
 
     try {
-        index = m_field_indexes.at(name);
+        index = m_field_indexes->at(name);
     }
 
     catch (out_of_range) { }
@@ -75,7 +89,7 @@ void db3_record::set_value(const char *data, int length)
 {
     int offset = 1;
 
-    for (int i = 0; i < m_descriptors->size(); ++i) {
+    for (int i = 0; i < m_field_count; ++i) {
         m_fields[i]->set_value(&data[offset], m_descriptors->at(i).size);
         offset += m_descriptors->at(i).size;
     }

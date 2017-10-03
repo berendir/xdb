@@ -43,6 +43,9 @@ public:
     virtual field_base * field(int index) const = 0;
 
     virtual field_base * field(const std::string &name) const = 0;
+
+protected:
+    virtual record_base * clone() const = 0;
 };
 
 }

@@ -22,8 +22,8 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#ifndef DB3_RECORD_H
-#define DB3_RECORD_H
+#ifndef XDB_DB3_RECORD_H
+#define XDB_DB3_RECORD_H
 
 #include <vector>
 #include <memory>
@@ -49,13 +49,18 @@ public:
 protected:
     db3_record(std::shared_ptr<std::vector<db3_field_descriptor>> descriptors);
 
+    db3_record(const db3_record &other);
+
+    inline db3_record * clone() const { return new db3_record(*this); }
+
     void set_value(const char *data, int length);
 
     std::shared_ptr<std::vector<db3_field_descriptor>> m_descriptors;
     std::vector<std::unique_ptr<db3_field>> m_fields;
-    std::unordered_map<std::string,int> m_field_indexes;
+    std::shared_ptr<std::unordered_map<std::string,int>> m_field_indexes;
+    const int m_field_count;
 };
 
 }
 
-#endif // DB3_RECORD_H
+#endif // XDB_DB3_RECORD_H
