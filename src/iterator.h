@@ -22,59 +22,45 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#include <string.h>
-#include <sstream>
-#include <iostream>
-
-#include "errors.h"
+#ifndef XDB_ITERATOR_H
+#define XDB_ITERATOR_H
 
 
-using namespace xdb;
+#include <iterator>
+#include <vector>
+#include <memory>
 
-xdb::exception::exception(const std::string &code, const std::string &message, const std::string &function) :
-    m_code(code),
-    m_message(message),
-    m_function(function)
+#include "table_base.h"
+#include "record_base.h"
+
+
+namespace xdb {
+
+class const_iterator : public std::iterator<std::input_iterator_tag, record_base>
 {
-    std::ostringstream what_string;
+public:
+    const_iterator(table_base *table, int starting_index, int buffer_size);
 
-    what_string << "On function \"" << m_function << "\", ";
-    what_string << "exception " << m_code << ": ";
-    what_string << m_message;
+    const_iterator(const const_iterator& mit);
 
-    m_what = what_string.str();
+    const_iterator& operator++();
+
+    bool operator==(const const_iterator& rhs) const;
+
+    inline bool operator!=(const const_iterator& rhs) const { return !(*this == rhs); }
+
+    const record_base * operator->() const;
+
+    const record_base * operator*() const;
+
+protected:
+    table_base *m_table;
+    std::vector<char> m_buffer;
+    int m_index;
+    std::unique_ptr<record_base> m_record;
+    int m_buffer_offset;
+};
+
 }
 
-exception::exception(const exception &other) :
-    m_code(other.m_code),
-    m_message(other.m_message),
-    m_function(other.m_function),
-    m_what(other.m_what)
-{
-
-}
-
-exception::~exception()
-{
-
-}
-
-const char * exception::what() const noexcept
-{
-    return m_what.c_str();
-}
-
-std::string exception::code() const
-{
-    return m_code;
-}
-
-std::string exception::message() const
-{
-    return m_message;
-}
-
-std::string exception::function() const
-{
-    return m_function;
-}
+#endif // XDB_ITERATOR_H

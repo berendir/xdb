@@ -3,8 +3,6 @@
 **
 ** Copyright (c) 2017 Berendir Huntinghawk
 **
-** This file is part of the xdb project.
-**
 ** Permission is hereby granted, free of charge, to any person obtaining a copy
 ** of this software and associated documentation files (the "Software"), to
 ** deal in the Software without restriction, including without limitation the
@@ -32,32 +30,31 @@
 
 namespace xdb {
 
-typedef struct {
-    char    version;
-    uint8_t update_year;
-    uint8_t update_month;
-    uint8_t update_day;
-    int32_t record_day;
-    int16_t header_size;
-    int16_t record_size;
-    char    reserved[18];
+struct db3_header {
+    char     version;
+    uint8_t  update_year;
+    uint8_t  update_month;
+    uint8_t  update_day;
+    uint32_t record_count;
+    uint16_t header_size;
+    uint16_t record_size;
+    char     reserved[18];
+};
 
-} db3_header;
 
-
-typedef struct {
+struct db3_field_descriptor {
     char    name[11];
     char    type;
     int32_t data_address;
-    uint8_t length;
+    uint8_t size;
     uint8_t decimal_places;
     char    reserved[14];
+};
 
-} db3_field_descriptor;
 
-
-const int DB3_TYPE_NO_MEMO = 0x03;
-const int DB3_TYPE_MEMO    = 0x83;
+const char DB3_TYPE_NO_MEMO = 0x03;
+const char DB3_TYPE_MEMO    = 0x83;
+const char DB3_HEADER_LIMIT = 0x0D;
 
 }
 

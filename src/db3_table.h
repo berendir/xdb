@@ -22,59 +22,47 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#include <string.h>
-#include <sstream>
-#include <iostream>
+#ifndef XDB_DB3_TABLE_H
+#define XDB_DB3_TABLE_H
 
-#include "errors.h"
+#include <vector>
+#include <memory>
+
+#include "table_base.h"
+#include "db3_structures.h"
+#include "db3_record.h"
 
 
-using namespace xdb;
+namespace xdb {
 
-xdb::exception::exception(const std::string &code, const std::string &message, const std::string &function) :
-    m_code(code),
-    m_message(message),
-    m_function(function)
+class db3_table : public table_base
 {
-    std::ostringstream what_string;
+public:
+    db3_table(const std::string &file_name);
 
-    what_string << "On function \"" << m_function << "\", ";
-    what_string << "exception " << m_code << ": ";
-    what_string << m_message;
+    void open();
 
-    m_what = what_string.str();
+    int size() const;
+
+    record_base * at(int index);
+
+protected:
+    int record_size() const;
+
+    uint32_t record_start() const;
+
+    record_base * create_record() const;
+
+    db3_header m_header;
+    std::shared_ptr<std::vector<db3_field_descriptor>> m_field_descriptors;
+    uint32_t m_records_start;
+    std::unique_ptr<db3_record> m_record;
+    int m_last_index;
+    std::vector<char> m_single_record_data;
+    const int m_header_size;
+    int m_field_descriptor_size;
+};
+
 }
 
-exception::exception(const exception &other) :
-    m_code(other.m_code),
-    m_message(other.m_message),
-    m_function(other.m_function),
-    m_what(other.m_what)
-{
-
-}
-
-exception::~exception()
-{
-
-}
-
-const char * exception::what() const noexcept
-{
-    return m_what.c_str();
-}
-
-std::string exception::code() const
-{
-    return m_code;
-}
-
-std::string exception::message() const
-{
-    return m_message;
-}
-
-std::string exception::function() const
-{
-    return m_function;
-}
+#endif // XDB_DB3_TABLE_H

@@ -3,8 +3,6 @@
 **
 ** Copyright (c) 2017 Berendir Huntinghawk
 **
-** This file is part of the xdb project.
-**
 ** Permission is hereby granted, free of charge, to any person obtaining a copy
 ** of this software and associated documentation files (the "Software"), to
 ** deal in the Software without restriction, including without limitation the
@@ -37,12 +35,17 @@ namespace xdb {
  */
 class record_base : public db3_entry_base {
 
+    friend class const_iterator;
+
 public:
     virtual ~record_base() { }
 
     virtual field_base * field(int index) const = 0;
 
     virtual field_base * field(const std::string &name) const = 0;
+
+protected:
+    virtual record_base * clone() const = 0;
 };
 
 }

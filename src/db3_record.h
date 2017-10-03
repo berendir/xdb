@@ -22,59 +22,45 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#include <string.h>
-#include <sstream>
-#include <iostream>
+#ifndef XDB_DB3_RECORD_H
+#define XDB_DB3_RECORD_H
 
-#include "errors.h"
+#include <vector>
+#include <memory>
+#include <unordered_map>
+#include "record_base.h"
+#include "db3_structures.h"
+#include "db3_field.h"
 
 
-using namespace xdb;
+namespace xdb {
 
-xdb::exception::exception(const std::string &code, const std::string &message, const std::string &function) :
-    m_code(code),
-    m_message(message),
-    m_function(function)
+class db3_record : public record_base
 {
-    std::ostringstream what_string;
+    friend class db3_table;
 
-    what_string << "On function \"" << m_function << "\", ";
-    what_string << "exception " << m_code << ": ";
-    what_string << m_message;
+public:
+    ~db3_record();
 
-    m_what = what_string.str();
+    virtual field_base * field(int index) const;
+
+    virtual field_base * field(const std::string &name) const;
+
+protected:
+    db3_record(std::shared_ptr<std::vector<db3_field_descriptor>> descriptors);
+
+    db3_record(const db3_record &other);
+
+    inline db3_record * clone() const { return new db3_record(*this); }
+
+    void set_value(const char *data);
+
+    std::shared_ptr<std::vector<db3_field_descriptor>> m_descriptors;
+    std::vector<std::unique_ptr<db3_field>> m_fields;
+    std::shared_ptr<std::unordered_map<std::string,int>> m_field_indexes;
+    const int m_field_count;
+};
+
 }
 
-exception::exception(const exception &other) :
-    m_code(other.m_code),
-    m_message(other.m_message),
-    m_function(other.m_function),
-    m_what(other.m_what)
-{
-
-}
-
-exception::~exception()
-{
-
-}
-
-const char * exception::what() const noexcept
-{
-    return m_what.c_str();
-}
-
-std::string exception::code() const
-{
-    return m_code;
-}
-
-std::string exception::message() const
-{
-    return m_message;
-}
-
-std::string exception::function() const
-{
-    return m_function;
-}
+#endif // XDB_DB3_RECORD_H

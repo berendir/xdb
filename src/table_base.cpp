@@ -22,59 +22,49 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#include <string.h>
-#include <sstream>
 #include <iostream>
-
-#include "errors.h"
+#include "table_base.h"
+#include "iterator.h"
 
 
 using namespace xdb;
+using namespace std;
 
-xdb::exception::exception(const std::string &code, const std::string &message, const std::string &function) :
-    m_code(code),
-    m_message(message),
-    m_function(function)
-{
-    std::ostringstream what_string;
 
-    what_string << "On function \"" << m_function << "\", ";
-    what_string << "exception " << m_code << ": ";
-    what_string << m_message;
-
-    m_what = what_string.str();
-}
-
-exception::exception(const exception &other) :
-    m_code(other.m_code),
-    m_message(other.m_message),
-    m_function(other.m_function),
-    m_what(other.m_what)
+table_base::table_base(const std::string &file_name) :
+    m_file_name(file_name)
 {
 
 }
 
-exception::~exception()
+table_base::~table_base()
 {
-
+    close();
 }
 
-const char * exception::what() const noexcept
+void table_base::close()
 {
-    return m_what.c_str();
+    m_stm.close();
 }
 
-std::string exception::code() const
+const_iterator & table_base::begin()
 {
-    return m_code;
+    if (!m_begin_const_iterator_cache)
+        m_begin_const_iterator_cache.reset(new const_iterator(this, 0, 1000));
+
+    return *m_begin_const_iterator_cache.get();
 }
 
-std::string exception::message() const
+const_iterator & table_base::end()
 {
-    return m_message;
+    if (!m_end_const_iterator_cache)
+        update_end_const_iterator_cache();
+
+    return *m_end_const_iterator_cache.get();
 }
 
-std::string exception::function() const
+void table_base::update_end_const_iterator_cache()
 {
-    return m_function;
+    m_end_const_iterator_cache.reset(new const_iterator(this, size() - 1, 1));
 }
+

@@ -22,59 +22,56 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#include <string.h>
-#include <sstream>
-#include <iostream>
+#ifndef XDB_DB3_FIELD_H
+#define XDB_DB3_FIELD_H
 
-#include "errors.h"
+#include <memory>
+#include "field_base.h"
+#include "db3_structures.h"
 
 
-using namespace xdb;
+namespace xdb {
 
-xdb::exception::exception(const std::string &code, const std::string &message, const std::string &function) :
-    m_code(code),
-    m_message(message),
-    m_function(function)
+union db3_field_data {
+    std::string *string;
+    std::tm *date;
+    double number;
+    bool boolean;
+};
+
+class db3_field : public field_base
 {
-    std::ostringstream what_string;
+    friend class db3_record;
 
-    what_string << "On function \"" << m_function << "\", ";
-    what_string << "exception " << m_code << ": ";
-    what_string << m_message;
+public:
+    ~db3_field();
 
-    m_what = what_string.str();
+    std::string name() const;
+
+    field_type type() const;
+
+    std::string toString() const;
+
+    std::tm toDate() const;
+
+    bool toBool() const;
+
+    double toNumber() const;
+
+protected:
+    db3_field(db3_field_descriptor *descriptor);
+
+    db3_field(const db3_field &other);
+
+    db3_field * clone() const { return new db3_field(*this); }
+
+    void set_value(const char *data);
+
+    db3_field_descriptor *m_descriptor;
+    db3_field_data m_data;
+    const int m_size;
+};
+
 }
 
-exception::exception(const exception &other) :
-    m_code(other.m_code),
-    m_message(other.m_message),
-    m_function(other.m_function),
-    m_what(other.m_what)
-{
-
-}
-
-exception::~exception()
-{
-
-}
-
-const char * exception::what() const noexcept
-{
-    return m_what.c_str();
-}
-
-std::string exception::code() const
-{
-    return m_code;
-}
-
-std::string exception::message() const
-{
-    return m_message;
-}
-
-std::string exception::function() const
-{
-    return m_function;
-}
+#endif // XDB_DB3_FIELD_H

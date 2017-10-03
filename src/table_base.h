@@ -22,59 +22,59 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#include <string.h>
-#include <sstream>
-#include <iostream>
+#ifndef XDB_TABLE_BASE_H
+#define XDB_TABLE_BASE_H
 
-#include "errors.h"
+#include <string>
+#include <fstream>
+#include <vector>
+#include <memory>
+
+#include "record_base.h"
 
 
-using namespace xdb;
+namespace xdb {
 
-xdb::exception::exception(const std::string &code, const std::string &message, const std::string &function) :
-    m_code(code),
-    m_message(message),
-    m_function(function)
-{
-    std::ostringstream what_string;
+class const_iterator;
 
-    what_string << "On function \"" << m_function << "\", ";
-    what_string << "exception " << m_code << ": ";
-    what_string << m_message;
+class table_base {
 
-    m_what = what_string.str();
+    friend class const_iterator;
+
+public:
+    table_base(const std::string &file_name);
+
+    virtual ~table_base();
+
+    virtual void open() = 0;
+
+    virtual void close();
+
+    inline bool is_open() const { return m_stm.is_open(); }
+
+    virtual int size() const = 0;
+
+    virtual record_base * at(int index) = 0;
+
+    const_iterator & begin();
+
+    const_iterator & end();
+
+protected:
+    virtual int record_size() const = 0;
+
+    virtual uint32_t record_start() const = 0;
+
+    virtual record_base * create_record() const = 0;
+
+    void update_end_const_iterator_cache();
+
+    const std::string m_file_name;
+    std::fstream m_stm;
+    std::unique_ptr<const_iterator> m_begin_const_iterator_cache;
+    std::unique_ptr<const_iterator> m_end_const_iterator_cache;
+};
+
 }
 
-exception::exception(const exception &other) :
-    m_code(other.m_code),
-    m_message(other.m_message),
-    m_function(other.m_function),
-    m_what(other.m_what)
-{
-
-}
-
-exception::~exception()
-{
-
-}
-
-const char * exception::what() const noexcept
-{
-    return m_what.c_str();
-}
-
-std::string exception::code() const
-{
-    return m_code;
-}
-
-std::string exception::message() const
-{
-    return m_message;
-}
-
-std::string exception::function() const
-{
-    return m_function;
-}
+#endif // XDB_TABLE_BASE_H

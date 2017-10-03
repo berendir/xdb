@@ -3,8 +3,6 @@
 **
 ** Copyright (c) 2017 Berendir Huntinghawk
 **
-** This file is part of the xdb project.
-**
 ** Permission is hereby granted, free of charge, to any person obtaining a copy
 ** of this software and associated documentation files (the "Software"), to
 ** deal in the Software without restriction, including without limitation the
@@ -58,11 +56,48 @@ private:
     std::string m_code;
     std::string m_message;
     std::string m_function;
-    char * m_what;
+    std::string m_what;
+};
+
+
+/**
+ * @brief The io_error class
+ */
+class io_error : public exception
+{
+public:
+    io_error(const std::string &code, const std::string &message, const std::string &function) :
+        exception(code, message, function) { }
+};
+
+/**
+ * @brief The validation_error class
+ */
+class validation_error : public exception
+{
+public:
+    validation_error(const std::string &code, const std::string &message, const std::string &function) :
+        exception(code, message, function) { }
+};
+
+/**
+ * @brief The out_of_range_error class
+ */
+class out_of_range_error : public exception
+{
+public:
+    out_of_range_error(const std::string &code, const std::string &message, const std::string &function) :
+        exception(code, message, function) { }
 };
 
 }
 
 #define XDB_THROW_EXCEPTION(c, m) throw xdb::exception((c), (m), __FUNCTION__)
+
+#define XDB_IO_ERROR(c, m) throw xdb::io_error((c), (m), __FUNCTION__)
+
+#define XDB_VALIDATION_ERROR(c, m) throw xdb::validation_error((c), (m), __FUNCTION__)
+
+#define XDB_OUT_OF_RANGE_ERROR(c, m) throw xdb::out_of_range_error((c), (m), __FUNCTION__)
 
 #endif // XDB_ERRORS_H

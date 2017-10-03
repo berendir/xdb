@@ -3,8 +3,6 @@
 **
 ** Copyright (c) 2017 Berendir Huntinghawk
 **
-** This file is part of the xdb project.
-**
 ** Permission is hereby granted, free of charge, to any person obtaining a copy
 ** of this software and associated documentation files (the "Software"), to
 ** deal in the Software without restriction, including without limitation the
@@ -38,7 +36,7 @@ public:
     virtual ~db3_entry_base() { }
 
 protected:
-    virtual void setValue(const char *data, int length) = 0;
+    virtual void set_value(const char *data) = 0;
 };
 
 }

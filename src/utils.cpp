@@ -22,59 +22,15 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#include <string.h>
-#include <sstream>
-#include <iostream>
-
-#include "errors.h"
-
+#include <sys/stat.h>
+#include "utils.h"
 
 using namespace xdb;
+using namespace std;
 
-xdb::exception::exception(const std::string &code, const std::string &message, const std::string &function) :
-    m_code(code),
-    m_message(message),
-    m_function(function)
+
+int64_t xdb::file_size(const std::string file_name)
 {
-    std::ostringstream what_string;
-
-    what_string << "On function \"" << m_function << "\", ";
-    what_string << "exception " << m_code << ": ";
-    what_string << m_message;
-
-    m_what = what_string.str();
-}
-
-exception::exception(const exception &other) :
-    m_code(other.m_code),
-    m_message(other.m_message),
-    m_function(other.m_function),
-    m_what(other.m_what)
-{
-
-}
-
-exception::~exception()
-{
-
-}
-
-const char * exception::what() const noexcept
-{
-    return m_what.c_str();
-}
-
-std::string exception::code() const
-{
-    return m_code;
-}
-
-std::string exception::message() const
-{
-    return m_message;
-}
-
-std::string exception::function() const
-{
-    return m_function;
+    struct stat64 stats;
+    return stat64(file_name.c_str(), &stats) == 0 ? stats.st_size : -1;
 }

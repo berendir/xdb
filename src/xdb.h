@@ -22,59 +22,23 @@
 ** IN THE SOFTWARE.
 *******************************************************************************/
 
-#include <string.h>
-#include <sstream>
-#include <iostream>
+#ifndef XDB_XDB_H
+#define XDB_XDB_H
 
-#include "errors.h"
+#include "table_base.h"
+#include "iterator.h"
 
 
-using namespace xdb;
+namespace xdb {
 
-xdb::exception::exception(const std::string &code, const std::string &message, const std::string &function) :
-    m_code(code),
-    m_message(message),
-    m_function(function)
-{
-    std::ostringstream what_string;
-
-    what_string << "On function \"" << m_function << "\", ";
-    what_string << "exception " << m_code << ": ";
-    what_string << m_message;
-
-    m_what = what_string.str();
-}
-
-exception::exception(const exception &other) :
-    m_code(other.m_code),
-    m_message(other.m_message),
-    m_function(other.m_function),
-    m_what(other.m_what)
-{
+/**
+ * @brief open_table
+ * @param file_name
+ * @param buffer_size
+ * @return
+ */
+table_base * open_table(const std::string &file_name);
 
 }
 
-exception::~exception()
-{
-
-}
-
-const char * exception::what() const noexcept
-{
-    return m_what.c_str();
-}
-
-std::string exception::code() const
-{
-    return m_code;
-}
-
-std::string exception::message() const
-{
-    return m_message;
-}
-
-std::string exception::function() const
-{
-    return m_function;
-}
+#endif // XDB_XDB_H
