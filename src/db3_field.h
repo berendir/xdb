@@ -65,7 +65,7 @@ protected:
 
     db3_field * clone() const { return new db3_field(*this); }
 
-    void set_value(const char *data, int length);
+    void set_value(const char *data);
 
     db3_field_descriptor *m_descriptor;
     db3_field_data m_data;

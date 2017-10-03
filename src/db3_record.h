@@ -53,7 +53,7 @@ protected:
 
     inline db3_record * clone() const { return new db3_record(*this); }
 
-    void set_value(const char *data, int length);
+    void set_value(const char *data);
 
     std::shared_ptr<std::vector<db3_field_descriptor>> m_descriptors;
     std::vector<std::unique_ptr<db3_field>> m_fields;

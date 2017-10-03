@@ -80,7 +80,7 @@ const_iterator &const_iterator::operator++()
         m_buffer_offset = 0;
     }
 
-    m_record->set_value(&m_buffer[m_buffer_offset], m_table->record_size());
+    m_record->set_value(&m_buffer[m_buffer_offset]);
     m_buffer_offset += m_table->record_size();
 }
 

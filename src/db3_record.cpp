@@ -80,17 +80,13 @@ field_base * db3_record::field(const std::string &name) const
     catch (out_of_range) { }
 
     if (index == -1)
-        XDB_THROW_EXCEPTION("XDBXXXX", "Field with name\"" + name + "\" does not exist");
+        XDB_VALIDATION_ERROR("XDB0014", "Field with name\"" + name + "\" does not exist");
 
     return field(index);
 }
 
-void db3_record::set_value(const char *data, int length)
+void db3_record::set_value(const char *data)
 {
-    int offset = 1;
-
-    for (int i = 0; i < m_field_count; ++i) {
-        m_fields[i]->set_value(&data[offset], m_descriptors->at(i).size);
-        offset += m_descriptors->at(i).size;
-    }
+    for (int i = 0, offset = 1; i < m_field_count; ++i, offset += (*m_descriptors)[i].size)
+        m_fields[i]->set_value(&data[offset]);
 }

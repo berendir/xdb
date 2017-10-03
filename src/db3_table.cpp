@@ -99,7 +99,7 @@ record_base * db3_table::at(int index)
 
     m_stm.seekp(m_records_start + index * m_header.record_size);
     m_stm.read(m_single_record_data.data(), m_single_record_data.size());
-    m_record->set_value(m_single_record_data.data(), m_single_record_data.size());
+    m_record->set_value(m_single_record_data.data());
 
     m_last_index = index;
 

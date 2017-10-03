@@ -115,12 +115,12 @@ double db3_field::toNumber() const
     return m_data.number;
 }
 
-void db3_field::set_value(const char *data, int length)
+void db3_field::set_value(const char *data)
 {
     switch (m_descriptor->type) {
 
         case string:
-            *m_data.string = std::string(data, length);
+            *m_data.string = std::string(data, m_descriptor->size);
             break;
 
         case date:
