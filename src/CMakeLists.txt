@@ -2,7 +2,6 @@ cmake_minimum_required ( VERSION 3.5 )
 
 project ( xdb )
 
-
 set ( PUBLIC_HEADERS
     "errors.h"
     "definitions.h"
@@ -11,6 +10,7 @@ set ( PUBLIC_HEADERS
     "record_base.h"
     "table_base.h"
     "iterator.h"
+    "xdb.h"
 )
 
 set ( PRIVATE_HEADERS
@@ -22,7 +22,6 @@ set ( PRIVATE_HEADERS
 )
 
 set ( SOURCES
-    "main.cpp"
     "errors.cpp"
     "db3_table.cpp"
     "utils.cpp"
@@ -30,6 +29,7 @@ set ( SOURCES
     "db3_record.cpp"
     "db3_field.cpp"
     "table_base.cpp"
+    "xdb.cpp"
 )
 
-add_executable ( ${PROJECT_NAME} ${PUBLIC_HEADERS} ${PRIVATE_HEADERS} ${SOURCES} )
+add_library ( ${PROJECT_NAME} SHARED ${PUBLIC_HEADERS} ${PRIVATE_HEADERS} ${SOURCES} )
