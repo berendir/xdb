@@ -29,6 +29,7 @@ set ( SOURCES
     "iterator.cpp"
     "db3_record.cpp"
     "db3_field.cpp"
+    "table_base.cpp"
 )
 
 add_executable ( ${PROJECT_NAME} ${PUBLIC_HEADERS} ${PRIVATE_HEADERS} ${SOURCES} )
