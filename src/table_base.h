@@ -28,30 +28,37 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <memory>
 
 #include "record_base.h"
 
 
 namespace xdb {
 
+class const_iterator;
+
 class table_base {
 
     friend class const_iterator;
 
 public:
-    table_base(const std::string &file_name) : m_file_name(file_name) { }
+    table_base(const std::string &file_name);
 
-    virtual ~table_base() { close(); }
+    virtual ~table_base();
 
     virtual void open() = 0;
 
-    virtual void close() { }
+    virtual void close();
 
     inline bool is_open() const { return m_stm.is_open(); }
 
     virtual int size() const = 0;
 
     virtual record_base * at(int index) = 0;
+
+    const_iterator & begin();
+
+    const_iterator & end();
 
 protected:
     virtual int record_size() const = 0;
@@ -60,8 +67,12 @@ protected:
 
     virtual record_base * create_record() const = 0;
 
+    void update_end_const_iterator_cache();
+
     const std::string m_file_name;
     std::fstream m_stm;
+    std::unique_ptr<const_iterator> m_begin_const_iterator_cache;
+    std::unique_ptr<const_iterator> m_end_const_iterator_cache;
 };
 
 }

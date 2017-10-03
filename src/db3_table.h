@@ -42,8 +42,6 @@ public:
 
     void open();
 
-    void close();
-
     int size() const;
 
     record_base * at(int index);

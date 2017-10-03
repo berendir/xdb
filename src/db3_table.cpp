@@ -84,11 +84,6 @@ void db3_table::open()
     m_single_record_data.resize(m_header.record_size);
 }
 
-void db3_table::close()
-{
-    m_stm.close();
-}
-
 int db3_table::size() const
 {
     return is_open() ? m_header.record_count : -1;
