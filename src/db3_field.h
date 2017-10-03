@@ -69,6 +69,7 @@ protected:
 
     db3_field_descriptor *m_descriptor;
     db3_field_data m_data;
+    const int m_size;
 };
 
 }

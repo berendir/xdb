@@ -87,6 +87,10 @@ field_base * db3_record::field(const std::string &name) const
 
 void db3_record::set_value(const char *data)
 {
-    for (int i = 0, offset = 1; i < m_field_count; ++i, offset += (*m_descriptors)[i].size)
+    int offset = 1;
+
+    for (int i = 0; i < m_field_count; ++i) {
         m_fields[i]->set_value(&data[offset]);
+        offset += (*m_descriptors)[i].size;
+    }
 }

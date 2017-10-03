@@ -31,7 +31,8 @@ using namespace std;
 
 
 db3_field::db3_field(db3_field_descriptor *descriptor) :
-    m_descriptor(descriptor)
+    m_descriptor(descriptor),
+    m_size(descriptor->size)
 {
     switch (m_descriptor->type) {
 
@@ -50,7 +51,8 @@ db3_field::db3_field(db3_field_descriptor *descriptor) :
 
 db3_field::db3_field(const db3_field &other) :
     m_descriptor(other.m_descriptor),
-    m_data()
+    m_data(),
+    m_size(other.m_size)
 {
     switch (m_descriptor->type) {
 
@@ -121,13 +123,13 @@ void db3_field::set_value(const char *data)
     switch (m_descriptor->type) {
 
         case string:
-            *m_data.string = std::string(data, m_descriptor->size);
+            *m_data.string = std::string(data, m_size);
             break;
 
         case date:
-            m_data.date->tm_year = 2017;
-            m_data.date->tm_mon = 9;
-            m_data.date->tm_mday = 28;
+            m_data.date->tm_year = atoi(std::string(data, 3).c_str());
+            m_data.date->tm_mon = atoi(std::string(&data[4], 2).c_str());
+            m_data.date->tm_mday = atoi(std::string(&data[6], 2).c_str());
             break;
 
         case boolean:
@@ -138,10 +140,10 @@ void db3_field::set_value(const char *data)
             break;
 
         case number:
-            m_data.number = atof(data);
+            m_data.number = atof(std::string(data, m_size).c_str());
             break;
 
         default:
-            XDB_VALIDATION_ERROR("XDBXXXX", "Invalid field type");
+            XDB_VALIDATION_ERROR("XDB0015", "Invalid field type");
     }
 }
