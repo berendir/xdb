@@ -127,7 +127,7 @@ void db3_field::set_value(const char *data)
             break;
 
         case date:
-            m_data.date->tm_year = atoi(std::string(data, 3).c_str());
+            m_data.date->tm_year = atoi(std::string(data, 4).c_str());
             m_data.date->tm_mon = atoi(std::string(&data[4], 2).c_str());
             m_data.date->tm_mday = atoi(std::string(&data[6], 2).c_str());
             break;
