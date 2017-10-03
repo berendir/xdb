@@ -53,6 +53,9 @@ public:
     virtual bool toBool() const = 0;
 
     virtual double toNumber() const = 0;
+
+protected:
+    virtual field_base * clone() const = 0;
 };
 
 }

@@ -47,6 +47,26 @@ db3_field::db3_field(db3_field_descriptor *descriptor) :
     }
 }
 
+db3_field::db3_field(const db3_field &other) :
+    m_descriptor(other.m_descriptor),
+    m_data()
+{
+    switch (m_descriptor->type) {
+
+        case string:
+            m_data.string = new std::string(*other.m_data.string);
+            break;
+
+        case date:
+            m_data.date = new tm(*other.m_data.date);
+            break;
+
+        default:
+            m_data = other.m_data;
+            break;
+    }
+}
+
 
 db3_field::~db3_field()
 {
